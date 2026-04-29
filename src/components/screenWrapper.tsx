@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
 import { View, StyleSheet, SafeAreaView } from "react-native";
-import  theme from "../global/styles/theme";
-import Header from "./header";
-import { useTheme } from "styled-components";
+import  {themes} from "../global/styles/color";
+import {Header} from "./Header";
 //import BottomTab from "./BottomTab";
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
 };
   
 export default function ScreenWrapper({ children }: Props) {
-  const theme = useTheme();
+  //rconst theme = useTheme();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,7 +26,7 @@ export default function ScreenWrapper({ children }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: themes.colors.background,
   },
   content: {
     flex: 1,

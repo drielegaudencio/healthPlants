@@ -4,8 +4,8 @@ import { PlantsListScreen} from "../screens/PlantsListScreen";
 import { SearchScreen } from "../screens/SearchScreen";
 import { PlantScannerScreen } from "../screens/PlantScannerScreen";
 import { ProfessionalsScreen } from "../screens/ProfessionalsScreen";   
+import { NewsScreen } from "../screens/NewsScreen";
 import { BlurView } from 'expo-blur';
-import { useTheme } from "styled-components";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -14,6 +14,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 type AppRoutes = {
     Home: undefined;
     Catálogo: undefined;
+    Notícias: undefined;
     Pesquisar: undefined;
     Reconhecer: undefined;
     Médicos: undefined;
@@ -24,7 +25,6 @@ export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
 const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
 
 export function AppRoutes() {
-    const theme = useTheme();
     
     return (
         <Navigator screenOptions={{
@@ -78,7 +78,18 @@ export function AppRoutes() {
                 }}
                 
             />
-
+            <Screen
+                name="Notícias"
+                component={NewsScreen}
+                options={{
+                    tabBarIcon:(({size,color})=>
+                        <MaterialCommunityIcons
+                            name="book-open-variant" 
+                            size={size} 
+                            color={color} />
+                    ),
+                }}
+            />
             <Screen
                 name="Catálogo"
                 component={PlantsListScreen}

@@ -3,11 +3,11 @@ import { StatusBar } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { Routes } from './src/routes';
 import { ThemeProvider } from 'styled-components';
-import theme from './src/global/styles/theme';
+import {themes} from './src/global/styles/color';
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={themes}>
       <StatusBar
         barStyle='light-content'
         backgroundColor="transparent"
