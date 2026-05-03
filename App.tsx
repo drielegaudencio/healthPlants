@@ -1,15 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StatusBar } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
+import { Routes } from './src/routes';
+import { ThemeProvider } from 'styled-components';
+import {themes} from './src/global/styles/color';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ThemeProvider theme={themes}>
+      <StatusBar
+        barStyle='light-content'
+        backgroundColor="transparent"
+        //translucent
+      />
+      <Routes />
+    </ThemeProvider>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -17,4 +24,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  }
 });
