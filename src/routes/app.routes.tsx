@@ -78,18 +78,7 @@ export function AppRoutes() {
                 }}
                 
             />
-            <Screen
-                name="Notícias"
-                component={NewsScreen}
-                options={{
-                    tabBarIcon:(({size,color})=>
-                        <MaterialCommunityIcons
-                            name="book-open-variant" 
-                            size={size} 
-                            color={color} />
-                    ),
-                }}
-            />
+            
             <Screen
                 name="Catálogo"
                 component={PlantsListScreen}

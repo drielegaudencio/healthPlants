@@ -4,7 +4,9 @@ export function PlantsListScreen() {
   return (
     <ScreenWrapper>
       <View>
-        <Text>Catálogo de Plantas</Text>
+        <Text>Catálogo de Plantas LLK</Text>
+
+        <Text>OI LIAM</Text>
       </View>
     </ScreenWrapper>
   );

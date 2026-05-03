@@ -7,6 +7,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { buscarNoticias } from "../../services/api";
 import { NewsCard } from "../../components/NewsCard";
 import { useNavigation } from "@react-navigation/native";
+import { styles } from "./style";
+
 type ActionProps = {
   icon: string;
   label: string;
@@ -15,11 +17,6 @@ type ActionProps = {
 export function HomeScreen() {
   const [noticias, setNoticias] = useState<any>(null);
 
-  /* const limitarDescricao = (texto: string, limite: number) => {
-    if (!texto) return "";
-    const palavras = texto.split(" ");
-    return palavras.slice(0, limite).join(" ") + "...";
-  }; */
   useEffect(() => {
     const carregarNoticias = async () => {
        const data = await buscarNoticias();
@@ -31,7 +28,7 @@ export function HomeScreen() {
 
 
   return (
-    <ScreenWrapper>
+    <ScreenWrapper >
       <Text style={styles.welcome}>
         Bem-vinda, Andriele 🌿
       </Text>
@@ -39,7 +36,9 @@ export function HomeScreen() {
       <Text style={styles.subtitle}>
         Seu guia de fitoterapia e bem-estar natural
       </Text>
-<ScrollView>
+    <ScrollView  style={{ flex: 1 }}
+      contentContainerStyle={{ paddingBottom: 180 }}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
         <View style={{flexDirection: "row", alignItems: "center", gap: 15}}>
           <MaterialCommunityIcons name="flower" size={34} color= 'rgba(15, 65, 8, 0.4)' backgroundColor='rgba(15, 65, 8, 0.1)' padding={10} justifyContent="between" position="relative" marginBottom={5} borderRadius={50} />
@@ -58,12 +57,13 @@ export function HomeScreen() {
         
       </View>
 
-      /// Card de ultimas notícias
+      {/* Card de ultimas notícias */}
       <View style={styles.cardNews}>
         <Text style={styles.cardTitle}>Últimas Notícias </Text>
          <FlatList
         data={noticias}
         horizontal={true} 
+        nestedScrollEnabled={true}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ paddingHorizontal: 15 }}
         renderItem={({ item }) => (
@@ -77,18 +77,17 @@ export function HomeScreen() {
     )}
   />
       </View>
-      <Text style={styles.section}>Ações rápidas</Text>
+      
+        <Text style={styles.section}>Ações rápidas</Text>
 
-      <View style={styles.actions}>
-        <Action icon="search" label="Sintomas" />
-        <Action icon="eco" label="Catálogo" />
-      </View>
-      {/* <TouchableOpacity style={styles.button}>
-          <Icon name="photo-camera" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Abrir Câmera</Text>
-        </TouchableOpacity> */}
+        <View style={styles.actions}>
+          <Action icon="search" label="Sintomas" />
+          <Action icon="favorite" label="Favoritos" />
+        </View>
+    
+      
 
-</ScrollView>
+    </ScrollView>
     </ScreenWrapper>
   );
 }
@@ -101,74 +100,3 @@ function Action({ icon, label }: ActionProps) {
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  welcome: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: themes.colors.primary,
-    marginTop: 10,
-  },
-  subtitle: {
-    color: themes.colors.textLight,
-    marginBottom: 15,
-  },
-  card: {
-    backgroundColor: themes.colors.card,
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 20,
-    elevation: 4,
-  },
-  cardNews: {
-    backgroundColor: themes.colors.lightGreen,
-    padding: 10,
-    borderRadius: 15,
-    marginBottom: 20,
-    elevation: 4,
-  },
-  cardTitle: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  cardText: {
-    color: themes.colors.textLight,
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: themes.colors.secondary,
-    padding: 10,
-    borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 10,
-  },
-  buttonText: {
-    color: "#fff",
-  },
-  section: {
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  actionCard: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 15,
-    width: "48%",
-    alignItems: "center",
-  },
-  newsItem: {
-    marginBottom: 15,
-  },
-  newsTitle: {
-    fontWeight: "bold",
-  },
-  newsDescription: {
-    color: themes.colors.textLight,
-  },
-
-});
