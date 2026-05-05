@@ -3,7 +3,7 @@ import {themes} from "../../global/styles/color";
 
 export const styles = StyleSheet.create({
   card: {
-    marginBottom: 5,
+    //marginBottom: 5,
     width: 300,
     marginRight: 10,
     marginLeft: 10,

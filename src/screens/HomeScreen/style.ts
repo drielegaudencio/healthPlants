@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: themes.colors.card,
-    padding: 15,
+    padding: 10,
     borderRadius: 15,
     marginBottom: 20,
     elevation: 4,
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     backgroundColor: themes.colors.lightGreen,
     padding: 10,
     borderRadius: 15,
-    marginBottom: 20,
+    marginBottom: 10,
     elevation: 4,
   },
   cardTitle: {
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
   },
   cardText: {
     color: themes.colors.textLight,
-    marginBottom: 10,
+    //marginBottom: 5,
   },
   button: {
     backgroundColor: themes.colors.secondary,
@@ -51,7 +51,9 @@ export const styles = StyleSheet.create({
   },
   section: {
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
+    marginTop: 10,
+    fontSize: 18,
     
   },
   actions: {
@@ -59,15 +61,43 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     //paddingHorizontal: 10,
     width: "50%",
+    //backgroundColor: themes.colors.lightGreen,
     
   },
   actionCard: {
     backgroundColor: "#fff",
-    padding: 20,
+    padding: 10,
     borderRadius: 15,
     width: "100%",
-    alignItems: "center",
     elevation: 4,
+    marginRight: 5,
+    alignContent: "flex-end",
+    gap: 10,
+  },
+   textContainer: {
+    flexDirection: "column",
+    flex: 1,
+  },
+
+  label: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: themes.colors.primary,
+  },
+
+  description: {
+    fontSize: 12,
+    color: themes.colors.textLight,
+    marginTop: 3,
+  },
+  actionIcon: {
+    padding: 10,
+    marginBottom: 5,
+    backgroundColor: themes.colors.lightGreen,
+    borderRadius: 50,
+    alignSelf: "flex-start",
+    
+    
   },
   newsItem: {
     marginBottom: 15,

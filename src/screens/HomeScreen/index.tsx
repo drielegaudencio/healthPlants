@@ -12,6 +12,7 @@ import { styles } from "./style";
 type ActionProps = {
   icon: string;
   label: string;
+  description: string;
 };
 
 export function HomeScreen() {
@@ -60,7 +61,7 @@ export function HomeScreen() {
       {/* Card de ultimas notícias */}
       <View style={styles.cardNews}>
         <Text style={styles.cardTitle}>Últimas Notícias </Text>
-         <FlatList
+        {/*  <FlatList
         data={noticias}
         horizontal={true} 
         nestedScrollEnabled={true}
@@ -74,15 +75,14 @@ export function HomeScreen() {
             publishedAt={item.publishedAt}
             url={item.url}
           />
-    )}
-  />
+        )}/> */}
       </View>
       
-        <Text style={styles.section}>Ações rápidas</Text>
+        <Text style={styles.section}>🍀Ações rápidas</Text>
 
         <View style={styles.actions}>
-          <Action icon="search" label="Sintomas" />
-          <Action icon="favorite" label="Favoritos" />
+          <Action icon="search" label="Buscar por Sintomas" description="Encontre plantas indicadas para o seu sintoma." />
+          <Action icon="favorite" label="Favoritos" description="Acesse rapidamente sua lista de favoritos." />
         </View>
     
       
@@ -92,11 +92,18 @@ export function HomeScreen() {
   );
 }
 
-function Action({ icon, label }: ActionProps) {
+function Action({ icon, label, description }: ActionProps) {
   return (
     <TouchableOpacity style={styles.actionCard}>
-      <Icon name={icon} size={28} color={themes.colors.primary} />
-      <Text>{label}</Text>
+      {/*Ícone*/}
+      <Icon name={icon} size={28} color={themes.colors.primary} style={styles.actionIcon} />
+
+      {/*Texto*/}
+      <View style={styles.textContainer}>
+        <Text style={styles.label}>{label}</Text>
+        <Text style={styles.description}>{description}</Text>
+      </View>
+      
     </TouchableOpacity>
   );
 }
