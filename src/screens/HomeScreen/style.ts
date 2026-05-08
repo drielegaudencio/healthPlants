@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     elevation: 4,
   },
   cardNews: {
-    backgroundColor: themes.colors.lightGreen,
+    backgroundColor: themes.colors.background,
     padding: 10,
     borderRadius: 15,
     marginBottom: 10,

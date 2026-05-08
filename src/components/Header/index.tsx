@@ -5,7 +5,7 @@ import {styles} from "./style";
 import {themes} from "../../global/styles/color";
 import { useNavigation } from '@react-navigation/native';
 import { useState } from "react";
-import {NewsScreen} from "../../screens/NewsScreen";
+import { PlantCadScreen } from "../../screens/PlantCadScreen";
 
 export function Header() {
   //const theme = useTheme();
@@ -24,7 +24,7 @@ export function Header() {
         <Icon name="person" size={26} color={themes.colors.lightGreen} style={styles.iconPerson} />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Health 🌿 Plants</Text>
+      <Text style={styles.title}>Health🌿Plants</Text>
 
       <TouchableOpacity onPress={toggleMenu}>
         <Icon name="menu" size={26} color={themes.colors.secondary} style={ styles.iconMenu}  />
@@ -38,18 +38,18 @@ export function Header() {
             <Text style={styles.menuText}>Principal</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.menuItem}
             onPress={() => goToScreen('FavoritesScreen')}
           >
             <Text style={styles.menuText}>Favoritos</Text>
           </TouchableOpacity>
-
+ */}
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => goToScreen('NewsScreen')}
+            onPress={() => goToScreen('PlantCadScreen') }
           >
-            <Text style={styles.menuText}>Notícias</Text>
+            <Text style={styles.menuText}>Cadastro Plantas</Text>
           </TouchableOpacity>
         </View>
       )}

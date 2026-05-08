@@ -1,10 +1,14 @@
-import { View, Text } from "react-native";
-import  ScreenWrapper from "../../components/screenWrapper";
-import { colectionCard } from "../../components/ColectionCard";
+import {} from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 import { styles } from "./style";
 
-export function PlantsListScreen() {
-  const plantCollection = [
+type CollectionCardProps = {
+    id: number;
+    name: string;
+    image: string;
+    prescription: string;    
+};
+const plantCollection = [
     {
         id: 1,
         name: "Coleção de Plantas Medicinais",
@@ -25,22 +29,11 @@ export function PlantsListScreen() {
     }
 
 ];
-  return (
-    <ScreenWrapper>
-      <View>
-        <Text style={styles.header}>Catálogo de Plantas LLK</Text>
-      </View>
-      <View>
-        {plantCollection.map((data) => (
-          <colectionCard
-            key={data.id}
-            id={data.id}
-            name={data.name}
-            image={data.image}
-            prescription={data.prescription}
-          />
-        ))}
-      </View>
-    </ScreenWrapper>
-  );
-}
+export function CollectionCard({ id, name, image, prescription }: CollectionCardProps) {    
+    return (
+        <View style={styles.card}>
+            <Text style={styles.cardTitle}>{name}</Text>
+            <Text style={styles.cardPrescription}>{prescription}</Text>
+        </View>
+    );
+}   

@@ -61,7 +61,7 @@ export function HomeScreen() {
       {/* Card de ultimas notícias */}
       <View style={styles.cardNews}>
         <Text style={styles.cardTitle}>Últimas Notícias </Text>
-        {/*  <FlatList
+         <FlatList
         data={noticias}
         horizontal={true} 
         nestedScrollEnabled={true}
@@ -75,7 +75,7 @@ export function HomeScreen() {
             publishedAt={item.publishedAt}
             url={item.url}
           />
-        )}/> */}
+        )}/>
       </View>
       
         <Text style={styles.section}>🍀Ações rápidas</Text>
