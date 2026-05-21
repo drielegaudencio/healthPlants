@@ -1,12 +1,12 @@
-import {} from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import React, {useCallback, useState} from "react";
+import { View, Text, TouchableOpacity , Image} from "react-native";
 import { styles } from "./style";
-
+import { PlantStorageDTO } from "../../storage/plant/PlantStorageDTO";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { getAllPlants } from "../../storage/plant/plantGetAll";
 type CollectionCardProps = {
-    id: number;
-    name: string;
-    image: string;
-    prescription: string;    
+    data : PlantStorageDTO
 };
 const plantCollection = [
     {
@@ -29,11 +29,44 @@ const plantCollection = [
     }
 
 ];
-export function CollectionCard({ id, name, image, prescription }: CollectionCardProps) {    
+export function CollectionCard({ data}: CollectionCardProps) {
+    const navigation = useNavigation<any>();
+    const [plantas, setPlantas] = useState<any[]>([]);
+    async function carregarPlantas() {
+        const data = await getAllPlants();
+        setPlantas(data);
+    }
+    useFocusEffect(
+        useCallback(() => {
+        carregarPlantas();
+        }, [])
+    );
     return (
-        <View style={styles.card}>
-            <Text style={styles.cardTitle}>{name}</Text>
-            <Text style={styles.cardPrescription}>{prescription}</Text>
+        //{data.image && (<Image source={{ uri: data.image }} style={styles.image} />)}
+        
+        <View style={styles.container}>
+            <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate("PlantDetails", { planta: data })}
+          >
+            {data.image && (<Image source={{ uri: data.image }} style={styles.image} />)}
+            <View style={styles.cardContent}>
+              <Text style={styles.plantName}>{data.namePop}</Text>
+              <Text style={styles.label}>Ação Principal:</Text>
+              <Text style={styles.description}>
+                {Array.isArray(data.properties)
+                  ? data.properties.join(", ")
+                  : data.properties || "Não informado"}
+              </Text>
+              <View style={styles.leafRow}>
+                <MaterialCommunityIcons name="leaf" size={22} color="#8BAD73" />
+                <Text style={styles.decorativeLine}>〜 〜 〜</Text>
+              </View>
+              <TouchableOpacity style={styles.heartButton}>
+              <Feather name="heart" size={26} color="#7D9B7A" />
+            </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         </View>
     );
-}   
+}

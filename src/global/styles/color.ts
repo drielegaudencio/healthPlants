@@ -1,3 +1,11 @@
+import {
+  CormorantGaramond_700Bold,
+} from "@expo-google-fonts/cormorant-garamond";
+
+import {
+  DMSerifDisplay_400Regular,
+} from "@expo-google-fonts/dm-serif-display"; 
+
 export const themes = {
   colors: {
     primary: "#1F3D2B",
@@ -9,9 +17,11 @@ export const themes = {
     textLight: "#6B6B6B",
   },
   fonts: {
-    regular: 'Poppins_400Regular',
-    medium: 'Poppins_500Medium',
-    bold: 'Poppins_700Bold'
+    logo: 'CormorantGaramond_700Bold',
+    titulo: 'dmSans_700Bold',
+    textRegular: 'Poppins_400Regular',
+    textMedium: 'Poppins_500Medium',
+    textBold: 'Poppins_700Bold'
   }
 
 };    

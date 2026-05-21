@@ -8,15 +8,22 @@ import { buscarNoticias } from "../../services/api";
 import { NewsCard } from "../../components/NewsCard";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "./style";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../@types/navigatio";
+
 
 type ActionProps = {
   icon: string;
   label: string;
   description: string;
+  onPress?: () => void;
 };
 
 export function HomeScreen() {
   const [noticias, setNoticias] = useState<any>(null);
+  //const navigation = useNavigation();
+  type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+const navigation = useNavigation<any>();
 
   useEffect(() => {
     const carregarNoticias = async () => {
@@ -81,7 +88,10 @@ export function HomeScreen() {
         <Text style={styles.section}>🍀Ações rápidas</Text>
 
         <View style={styles.actions}>
-          <Action icon="search" label="Buscar por Sintomas" description="Encontre plantas indicadas para o seu sintoma." />
+          
+            <Action  onPress={() => navigation.navigate("Pesquisar")} icon="search" label="Buscar por Sintomas" description="Encontre plantas indicadas para o seu sintoma."/>
+          
+          
           <Action icon="favorite" label="Favoritos" description="Acesse rapidamente sua lista de favoritos." />
         </View>
     
@@ -92,16 +102,17 @@ export function HomeScreen() {
   );
 }
 
-function Action({ icon, label, description }: ActionProps) {
+function Action({ icon, label, description, onPress }: ActionProps) {
   return (
-    <TouchableOpacity style={styles.actionCard}>
+    <TouchableOpacity style={styles.actionCard} onPress={onPress}>
       {/*Ícone*/}
-      <Icon name={icon} size={28} color={themes.colors.primary} style={styles.actionIcon} />
+      <Icon name={icon} size={28} style={styles.actionIcon} />
 
       {/*Texto*/}
       <View style={styles.textContainer}>
         <Text style={styles.label}>{label}</Text>
         <Text style={styles.description}>{description}</Text>
+        
       </View>
       
     </TouchableOpacity>

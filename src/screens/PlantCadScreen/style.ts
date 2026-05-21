@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: themes.colors.background,
+       //backgroundColor: themes.colors.background,
         marginBottom: 40,
         height: '50%',
     },
@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center',
-        marginTop: 20,
         color: themes.colors.primary,
     },
     input: {
@@ -25,6 +24,20 @@ export const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 15,
     },
+    checkbox: {
+  width: 22,
+  height: 22,
+  borderWidth: 2,
+  borderColor: "#4E7A52",
+  borderRadius: 6,
+  marginRight: 10,
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+selectedCheckbox: {
+  backgroundColor: "#4E7A52",
+},
     inputTEXT: {
         color: themes.colors.textLight,
         fontWeight: 'bold',

@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     color: themes.colors.primary,
     marginTop: 10,
+    fontFamily: themes.fonts.titulo
   },
   subtitle: {
     color: themes.colors.textLight,

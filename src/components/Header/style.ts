@@ -11,13 +11,18 @@ export const styles = StyleSheet.create({
     marginTop: 20,
     position: "relative",
     zIndex: 999,
-  elevation: 10,
+    elevation: 10,
   },
-  title: {
+  wrapper: {
+    position: "relative",
+    zIndex: 9999,
+    elevation: 20,
+  },
+  logo: {
     color: themes.colors.secondary,
     fontSize: 29,
     fontWeight: "bold",
-    fontFamily: "roboto-regular",
+    fontFamily: themes.fonts.logo,
   },
   iconMenu: {
     backgroundColor: themes.colors.lightGreen,
@@ -49,6 +54,38 @@ export const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 16,
-    color: '#ffffff',
+    color: themes.colors.text,
   },
+   modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',  
+        justifyContent: 'center',
+        alignItems: 'center',
+    },  
+    menu: {
+        position: 'absolute',
+        backgroundColor: '#fff',
+        borderRadius: 3,
+        marginLeft: -25,
+        padding: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+   triggerStyle : { 
+    height : 40 , 
+    backgroundColor : themes.colors.primary , 
+    flexDirection : 'row' , 
+    justifyContent : 'space-between' , 
+    alignItems : 'center' , 
+    width : 100 , 
+    paddingHorizontal : 20 , 
+    paddingVertical : 10 , 
+    borderRadius : 5 , 
+  }, 
+  triggerText :{ 
+    fontSize : 16 ,
+  } 
 });

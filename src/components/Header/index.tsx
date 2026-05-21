@@ -1,59 +1,55 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import {styles} from "./style";
-import {themes} from "../../global/styles/color";
-import { useNavigation } from '@react-navigation/native';
-import { useState } from "react";
-import { PlantCadScreen } from "../../screens/PlantCadScreen";
+import {styles} from "./style"
+import { themes } from "../../global/styles/color";
+import { UserMenu } from "../UserMenu";
+import { SystemMenu } from "../SystemMenu";
 
 export function Header() {
-  //const theme = useTheme();
-   const [menuVisible, setMenuVisible] = useState(false);
-   const navigation = useNavigation();
-  function toggleMenu() {
-    setMenuVisible(!menuVisible);
+  const navigation = useNavigation();
+
+  const [userMenuVisible, setUserMenuVisible] = useState(false);
+  const [systemMenuVisible, setSystemMenuVisible] = useState(false);
+
+  function toggleUserMenu() {
+    setUserMenuVisible(!userMenuVisible);
+    setSystemMenuVisible(false);
   }
-   function goToScreen(screenName: string) {
-    setMenuVisible(false);
+
+  function toggleSystemMenu() {
+    setSystemMenuVisible(!systemMenuVisible);
+    setUserMenuVisible(false);
+  }
+
+  function goToScreen(screenName: string) {
+    setUserMenuVisible(false);
+    setSystemMenuVisible(false);
+
     navigation.navigate(screenName as never);
   }
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity>
-        <Icon name="person" size={26} color={themes.colors.lightGreen} style={styles.iconPerson} />
-      </TouchableOpacity>
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={toggleUserMenu}>
+          <Icon name="person" size={26} color={themes.colors.lightGreen} style={styles.iconPerson} />
 
-      <Text style={styles.title}>Health🌿Plants</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={toggleMenu}>
-        <Icon name="menu" size={26} color={themes.colors.secondary} style={ styles.iconMenu}  />
-      </TouchableOpacity>
-      {menuVisible && (
-        <View style={styles.dropdownMenu}>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => goToScreen('HomeScreen')}
-          >
-            <Text style={styles.menuText}>Principal</Text>
-          </TouchableOpacity>
+        <Text style={styles.logo }>Health 🌿 Plants</Text>
 
-          {/* <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => goToScreen('FavoritesScreen')}
-          >
-            <Text style={styles.menuText}>Favoritos</Text>
-          </TouchableOpacity>
- */}
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => goToScreen('PlantCadScreen') }
-          >
-            <Text style={styles.menuText}>Cadastro Plantas</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+        <TouchableOpacity onPress={toggleSystemMenu}>
+          <Icon name="menu" size={26} color={themes.colors.secondary} style={ styles.iconMenu}  />
 
+        </TouchableOpacity>
+      </View>
+
+      <UserMenu visible={userMenuVisible} onNavigate={goToScreen} />
+
+      <SystemMenu visible={systemMenuVisible} onNavigate={goToScreen} />
     </View>
   );
 }
+

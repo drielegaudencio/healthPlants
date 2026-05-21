@@ -4,8 +4,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Routes } from './src/routes';
 import { ThemeProvider } from 'styled-components';
 import {themes} from './src/global/styles/color';
-
+import { useFonts } from '@expo-google-fonts/cormorant-garamond';
 export default function App() {
+  
   return (
     <ThemeProvider theme={themes}>
       <StatusBar
