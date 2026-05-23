@@ -7,53 +7,84 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-
+import { userCreate } from "../../storage/user/userCreate";
+import { userGetAll } from "../../storage/user/userGetAll";
+import { UserStorageDTO } from "../../storage/user/UserStorageDTO";
 import ScreenWrapper from "../../components/screenWrapper";
 import { styles } from "./style";
+import { adressGetAll } from "../../storage/adress/adressGetAll";
+import { useNavigation } from "@react-navigation/native";
+import { convertBool } from "../../components/utils/convertBool";
+import { adressCreate } from "../../storage/adress/adressCreate";
 
 export function RegisterScreen() {
   // Dados pessoais
-  const [nome, setNome] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
+  const [typeUser, setTypeUser] = useState("");
   // Senhas
-  const [senha, setSenha] = useState("");
+  const [password, setPassword] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-
+  const [isAdmin, setIsAdmin] = useState("");
   // Endereço
   const [cep, setCep] = useState("");
   const [logradouro, setLogradouro] = useState("");
-  const [numero, setNumero] = useState("");
-  const [complemento, setComplemento] = useState("");
+  const [number, setNumber] = useState("");
+  const [complement, setComplement] = useState("");
   const [bairro, setBairro] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [estado, setEstado] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
 
   // Controle de visibilidade das senhas
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
+  const navigation = useNavigation<any>();
 
-  const handleRegister = () => {
-    console.log("Cadastro realizado", {
-      nome,
+  async function handleRegister() {
+      if (password !== confirmarSenha) {
+        return Alert.alert(
+          "Erro",
+          "As senhas não coincidem"
+        );
+      } 
+    const dataUser = {
+      id: String(new Date().getTime()),
+      name,
       email,
-      senha,
-      confirmarSenha,
+      password,
+      typeUser : "comum",
+      isAdmin : convertBool(isAdmin),
+    };
+    const dataAddress = {
+      id : String(new Date().getTime()),
+      idUser: String(dataUser.id),
       cep,
       logradouro,
-      numero,
-      complemento,
+      number,
+      complement,
       bairro,
-      cidade,
-      estado,
+      city,
+      state
+    };
+
+    console.log("Cadastro realizado", {
+      user: dataUser,
+      address: dataAddress
     });
+    await userCreate(dataUser);
+    await adressCreate(dataAddress);
+    const result = await userGetAll() ;
+    console.log("Usuários cadastrados:", result);
+    return navigation.navigate("Login");
   };
 
   const handleGoToLogin = () => {
     console.log("Voltar para login");
+    return navigation.navigate("Login");
   };
 
   return (
@@ -106,8 +137,8 @@ export function RegisterScreen() {
                 style={styles.input}
                 placeholder="Nome completo"
                 placeholderTextColor="#8A8A8A"
-                value={nome}
-                onChangeText={setNome}
+                value={name}
+                onChangeText={setName}
               />
             </View>
 
@@ -127,6 +158,7 @@ export function RegisterScreen() {
                 autoCapitalize="none"
                 value={email}
                 onChangeText={setEmail}
+                
               />
             </View>
 
@@ -178,8 +210,8 @@ export function RegisterScreen() {
                 placeholder="Número"
                 placeholderTextColor="#8A8A8A"
                 keyboardType="numeric"
-                value={numero}
-                onChangeText={setNumero}
+                value={number}
+                onChangeText={setNumber}
               />
             </View>
 
@@ -195,8 +227,8 @@ export function RegisterScreen() {
                 style={styles.input}
                 placeholder="Complemento"
                 placeholderTextColor="#8A8A8A"
-                value={complemento}
-                onChangeText={setComplemento}
+                value={complement}
+                onChangeText={setComplement}
               />
             </View>
 
@@ -229,8 +261,8 @@ export function RegisterScreen() {
                 style={styles.input}
                 placeholder="Cidade"
                 placeholderTextColor="#8A8A8A"
-                value={cidade}
-                onChangeText={setCidade}
+                value={city}
+                onChangeText={setCity}
               />
             </View>
 
@@ -248,8 +280,8 @@ export function RegisterScreen() {
                 placeholderTextColor="#8A8A8A"
                 autoCapitalize="characters"
                 maxLength={2}
-                value={estado}
-                onChangeText={setEstado}
+                value={state}
+                onChangeText={setState}
               />
             </View>
 
@@ -266,8 +298,8 @@ export function RegisterScreen() {
                 placeholder="Senha"
                 placeholderTextColor="#8A8A8A"
                 secureTextEntry={!mostrarSenha}
-                value={senha}
-                onChangeText={setSenha}
+                value={password}
+                onChangeText={setPassword}
               />
               <TouchableOpacity
                 onPress={() => setMostrarSenha(!mostrarSenha)}

@@ -3,8 +3,10 @@ import { View, Text, TouchableOpacity , Image} from "react-native";
 import { styles } from "./style";
 import { PlantStorageDTO } from "../../storage/plant/PlantStorageDTO";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { getAllPlants } from "../../storage/plant/plantGetAll";
+import { plantUpdate } from "../../storage/plant/plantUpdate";
+import { useAuth } from "../../context/AuthContext";
 type CollectionCardProps = {
     data : PlantStorageDTO
 };
@@ -30,17 +32,23 @@ const plantCollection = [
 
 ];
 export function CollectionCard({ data}: CollectionCardProps) {
+    const { user } = useAuth();
     const navigation = useNavigation<any>();
-    const [plantas, setPlantas] = useState<any[]>([]);
-    async function carregarPlantas() {
-        const data = await getAllPlants();
-        setPlantas(data);
-    }
-    useFocusEffect(
-        useCallback(() => {
-        carregarPlantas();
-        }, [])
-    );
+    const [isFavorite, setIsFavorite] = useState(
+  data.favorite || false
+);
+    async function handleFavorite() {
+
+    const updatedPlant = {
+    ...data,
+    favorite: !isFavorite,
+    };
+
+  setIsFavorite(!isFavorite);
+
+  await plantUpdate(updatedPlant);
+}
+    
     return (
         //{data.image && (<Image source={{ uri: data.image }} style={styles.image} />)}
         
@@ -62,9 +70,17 @@ export function CollectionCard({ data}: CollectionCardProps) {
                 <MaterialCommunityIcons name="leaf" size={22} color="#8BAD73" />
                 <Text style={styles.decorativeLine}>〜 〜 〜</Text>
               </View>
-              <TouchableOpacity style={styles.heartButton}>
-              <Feather name="heart" size={26} color="#7D9B7A" />
-            </TouchableOpacity>
+              <TouchableOpacity onPress={handleFavorite}>
+                <MaterialCommunityIcons
+                    name={
+                    isFavorite
+                        ? "heart"
+                        : "heart-outline"
+                    }
+                    size={30}
+                    color="#5A8F62"
+                />
+                </TouchableOpacity>
             </View>
           </TouchableOpacity>
         </View>

@@ -35,6 +35,7 @@ export function PlantCadScreen() {
     const [vitaminas,setVitaminas] = useState('');
     const [minerais,setMinerais] = useState('');
     const [outros,setOutros] = useState('');
+    const [favorite, setFavorite] = useState('');
   
    async function handleNewPlant() {
         const data = {
@@ -67,7 +68,8 @@ export function PlantCadScreen() {
             referencia,
             vitaminas: vitaminas.split(',').map(item => item.trim()), // Convertendo string para array  
             minerais: minerais.split(',').map(item => item.trim()), // Convertendo string para array
-            outros: outros.split(',').map(item => item.trim()) // Convertendo string para array
+            outros: outros.split(',').map(item => item.trim()), // Convertendo string para array
+            favorite: convertBool(favorite),
         };
         console.log("Clicou em cadastrar ->",data);
         setNamePop('');
@@ -238,8 +240,9 @@ export function PlantCadScreen() {
                 
                 <Text style={styles.inputTEXT}>Imagem</Text>
 
-                <View style={{ marginBottom: 15, padding: 10, borderRadius: 5 }}>
+                <View style={{ marginBottom: 15, padding: 10, borderRadius: 5, backgroundColor: themes.colors.primary }}>
                 <Button
+                    
                     color={themes.colors.lightGreen}
                     title="Selecionar imagem"
                     onPress={selecionarImagem}

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { themes } from "../../global/styles/color";
+import { useAuth } from "../../context/AuthContext";
 
 type Props = {
   visible: boolean;
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export function SystemMenu({ visible, onNavigate }: Props) {
+  const { user, signOut } = useAuth();
   if (!visible) return null;
 
   return (
@@ -15,20 +17,24 @@ export function SystemMenu({ visible, onNavigate }: Props) {
       <TouchableOpacity style={styles.item} onPress={() => onNavigate("Home")}>
         <Text style={styles.text}>Principal</Text>
       </TouchableOpacity>
+    {user?.isAdmin && (
+        <>
+          <TouchableOpacity style={styles.item} onPress={() => onNavigate("Cadastro Plantas")}>
+          <Text style={styles.text}>Cadastrar Planta</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity style={styles.item} onPress={() => onNavigate("Cadastro Plantas")}>
-        <Text style={styles.text}>Cadastrar Planta</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.item} onPress={() => onNavigate("Cadastro Indicações")}>
-        <Text style={styles.text}>Cadastrar Indicação</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.item} onPress={() => onNavigate("NewsScreen")}>
-        <Text style={styles.text}>Notícias</Text>
+          <TouchableOpacity style={styles.item} onPress={() => onNavigate("Cadastro Indicações")}>
+            <Text style={styles.text}>Cadastrar Indicação</Text>
+          </TouchableOpacity>
+        </>
+    )}
+      
+      <TouchableOpacity style={styles.item} onPress={() => onNavigate("Receitas")}>
+        <Text style={styles.text}>Receitas</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.item} onPress={() => onNavigate("ProfessionalsScreen")}>
-        <Text style={styles.text}>Profissionais</Text>
+        <Text style={styles.text}>Buscar Profissionais</Text>
       </TouchableOpacity>
     </View>
   );

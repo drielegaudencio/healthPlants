@@ -138,4 +138,10 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
   },
+  footerLink2: {
+    color: "#4F7A5A",
+    fontSize: 14,
+    fontWeight: "bold",
+    right:-120
+  },
 });

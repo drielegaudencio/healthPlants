@@ -7,16 +7,23 @@ import { SearchScreen } from "../screens/SearchScreen";
 import { PlantScannerScreen } from "../screens/PlantScannerScreen";
 import { PlantCadScreen } from "../screens/PlantCadScreen";
 import { ProfessionalsScreen } from "../screens/ProfessionalsScreen";
-import PlantsListScreen from "../screens/PlantsListScreen";
+import  { CatalogScreen } from "../screens/PlantsListScreen";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { IndicacaoCadScreen } from "../screens/IndicacaoCadScreen";
 import PlantDetailsScreen from "../screens/PlantDetailsScreen";
+import { LoginScreen } from "../screens/LoginScreen";
+import { RegisterScreen } from "../screens/RegisterScreen";
+import { UserStorageDTO } from "../storage/user/UserStorageDTO";
+import { ProfessionalRegisterScreen } from "../screens/ProfessionalRegisterScreen";
+import { DiseaseDetailsScreen } from "../screens/DiseaseDetailsScreen";
+import { FavoritesScreen } from "../screens/FavoritScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const data = {} as UserStorageDTO;
 
-function BottomTabs() {
+function BottomTabs({ route }: any) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -36,17 +43,23 @@ function BottomTabs() {
           overflow: "hidden",
         },
       }}
-    >
-      <Tab.Screen
+    > 
+      <Tab.Screen name="Home" component={HomeScreen} options={{
+          tabBarIcon: ({ size, color }) => (
+            <MaterialIcons name="home" size={size} color={color} />
+          ),
+        }} 
+      />
+      {/* <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={() => HomeScreen(data.id)}
         options={{
           tabBarIcon: ({ size, color }) => (
             <MaterialIcons name="home" size={size} color={color} />
           ),
         }}
       />
-
+ */}
       <Tab.Screen
         name="Pesquisar"
         component={SearchScreen}
@@ -58,7 +71,7 @@ function BottomTabs() {
       />
       <Tab.Screen
         name="Catálogo"
-        component={PlantsListScreen}
+        component={CatalogScreen}
         options={{
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons
@@ -94,9 +107,10 @@ function BottomTabs() {
         component={PlantDetailsScreen} 
         options={{tabBarButton: () => null,
           tabBarItemStyle: { display: "none",
-    },
-  }} 
+    },}}
       />
+      
+      
     </Tab.Navigator>
   );
 }
@@ -104,17 +118,21 @@ function BottomTabs() {
 export function AppRoutes() {
   return (
     
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tabs" component={BottomTabs} />
         
         {/* Telas que NÃO aparecem no menu inferior */}
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Cadastro Plantas" component={PlantCadScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Cadastro Indicações" component={IndicacaoCadScreen} />
+        <Stack.Screen name="Favorite" component={FavoritesScreen} />
+        <Stack.Screen name="UserCad" component={RegisterScreen} />
         <Stack.Screen name="PlantDetails" component={PlantDetailsScreen} />
-        <Stack.Screen name="ProfessionalsScreen" component={ProfessionalsScreen} />
-        <Stack.Screen name="Search" component={SearchScreen} />
-        
+        {/* <Stack.Screen name="Reconhecer" component={PlantScannerScreen} /> */}
+        <Stack.Screen name="ProfessionalRegisterScreen" component={ProfessionalRegisterScreen} />
+        <Stack.Screen name="Pesquisar" component={SearchScreen} />
+        <Stack.Screen name="DetailIndic" component={DiseaseDetailsScreen} />
       </Stack.Navigator>
       
   );

@@ -8,42 +8,54 @@ import {
   Platform,
   ScrollView,
   Switch,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import ScreenWrapper from "../../components/screenWrapper";
 import { styles } from "./style";
+import { colabGetAll } from "../../storage/colaborador/colabGetAll";
+import { ColabStorageDTO } from "../../storage/colaborador/ColabStorageDTO";
+import { colabCreate } from "../../storage/colaborador/colabCreate";
+import { convertBool } from "../../components/utils/convertBool";
+import { userCreate } from "../../storage/user/userCreate";
+import { adressCreate } from "../../storage/adress/adressCreate";
+import { userGetAll } from "../../storage/user/userGetAll";
+import { useNavigation } from "@react-navigation/native";
 
 export function ProfessionalRegisterScreen() {
+  const navigation = useNavigation<any>();
   // Dados pessoais
-  const [nome, setNome] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [isAdmin, setIsAdmin] = useState("");
 
   // Endereço
-  const [cep, setCep] = useState("");
-  const [logradouro, setLogradouro] = useState("");
-  const [numero, setNumero] = useState("");
-  const [complemento, setComplemento] = useState("");
-  const [bairro, setBairro] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [estado, setEstado] = useState("");
+    const [cep, setCep] = useState("");
+    const [logradouro, setLogradouro] = useState("");
+    const [number, setNumber] = useState("");
+    const [complement, setComplement] = useState("");
+    const [bairro, setBairro] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
 
   // Dados profissionais
-  const [profissao, setProfissao] = useState("");
+  const [profission, setProfission] = useState("");
+  const [idUser, idUserUser] = useState("");
   const [especialidade, setEspecialidade] = useState("");
-  const [numeroConselho, setNumeroConselho] = useState("");
+  const [numeroRegistro, setNumeroRegistro] = useState("");
   const [instituicao, setInstituicao] = useState("");
   const [anosExperiencia, setAnosExperiencia] = useState("");
-  const [telefoneProfissional, setTelefoneProfissional] = useState("");
-  const [siteProfissional, setSiteProfissional] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [site, setSite] = useState("");
   const [biografia, setBiografia] = useState("");
-  const [atendimentoOnline, setAtendimentoOnline] = useState(false);
+  const [atendimentoOnline, setAtendimentoOnline] = useState("");
   const [atendimentoPresencial, setAtendimentoPresencial] =
-    useState(true);
+    useState("");
 
   // Senhas
-  const [senha, setSenha] = useState("");
+  const [password, setPassword] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
 
   // Controle de visibilidade das senhas
@@ -51,29 +63,58 @@ export function ProfessionalRegisterScreen() {
   const [mostrarConfirmacao, setMostrarConfirmacao] =
     useState(false);
 
-  const handleRegister = () => {
-    console.log("Cadastro profissional realizado", {
-      nome,
-      email,
-      cep,
-      logradouro,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      estado,
-      profissao,
-      especialidade,
-      numeroConselho,
-      instituicao,
-      anosExperiencia,
-      telefoneProfissional,
-      siteProfissional,
-      biografia,
-      atendimentoOnline,
-      atendimentoPresencial,
-      senha,
-    });
+  async function handleRegister(){
+    if (password !== confirmarSenha) {
+            return Alert.alert(
+              "Erro",
+              "As senhas não coincidem"
+            );
+          } 
+        const dataUser = {
+          id: String(new Date().getTime()),
+          name,
+          email,
+          password,
+          typeUser : "colab",
+          isAdmin : convertBool(isAdmin),
+        };
+        const dataAddress = {
+          id : String(new Date().getTime()),
+          idUser: String(dataUser.id),
+          cep,
+          logradouro,
+          number,
+          complement,
+          bairro,
+          city,
+          state
+        };
+        const dataProfission ={
+          id : String(new Date().getTime()),
+          profission,
+          especialidade,
+          idUser: dataUser.id,
+          anosExperiencia,
+          numeroRegistro,
+          instituicao,
+          telefone,
+          site,
+          biografia,
+          atendimentoOnline: convertBool(atendimentoOnline),
+          atendimentoPresencial: convertBool(atendimentoPresencial) 
+        }
+        console.log("Cadastro realizado", {
+          user: dataUser,
+          address: dataAddress,
+          profission: dataProfission
+        });
+        await userCreate(dataUser);
+        await colabCreate(dataProfission);
+        await adressCreate(dataAddress);
+        const result = await userGetAll() ;
+        console.log("Usuários cadastrados:", result);
+        return navigation.navigate("Login");
+    
   };
 
   const handleGoToLogin = () => {
@@ -90,6 +131,7 @@ export function ProfessionalRegisterScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+  
         >
           {/* Header */}
           <View style={styles.header}>
@@ -132,10 +174,10 @@ export function ProfessionalRegisterScreen() {
               />
               <TextInput
                 style={styles.input}
-                placeholder="Nome completo"
+                placeholder="name completo"
                 placeholderTextColor="#8A8A8A"
-                value={nome}
-                onChangeText={setNome}
+                value={name}
+                onChangeText={setName}
               />
             </View>
 
@@ -182,6 +224,7 @@ export function ProfessionalRegisterScreen() {
                 size={22}
                 color="#6DBA75"
                 style={styles.inputIcon}
+                
               />
               <TextInput
                 style={styles.input}
@@ -204,8 +247,8 @@ export function ProfessionalRegisterScreen() {
                 placeholder="Número"
                 placeholderTextColor="#8A8A8A"
                 keyboardType="numeric"
-                value={numero}
-                onChangeText={setNumero}
+                value={number}
+                onChangeText={setNumber}
               />
             </View>
 
@@ -220,8 +263,8 @@ export function ProfessionalRegisterScreen() {
                 style={styles.input}
                 placeholder="Complemento"
                 placeholderTextColor="#8A8A8A"
-                value={complemento}
-                onChangeText={setComplemento}
+                value={complement}
+                onChangeText={setComplement}
               />
             </View>
 
@@ -252,8 +295,8 @@ export function ProfessionalRegisterScreen() {
                 style={styles.input}
                 placeholder="Cidade"
                 placeholderTextColor="#8A8A8A"
-                value={cidade}
-                onChangeText={setCidade}
+                value={city}
+                onChangeText={setCity}
               />
             </View>
 
@@ -270,8 +313,8 @@ export function ProfessionalRegisterScreen() {
                 placeholderTextColor="#8A8A8A"
                 autoCapitalize="characters"
                 maxLength={2}
-                value={estado}
-                onChangeText={setEstado}
+                value={state}
+                onChangeText={setState}
               />
             </View>
 
@@ -288,8 +331,8 @@ export function ProfessionalRegisterScreen() {
                 style={styles.input}
                 placeholder="Profissão (Médico, Nutricionista...)"
                 placeholderTextColor="#8A8A8A"
-                value={profissao}
-                onChangeText={setProfissao}
+                value={profission}
+                onChangeText={setProfission}
               />
             </View>
 
@@ -320,8 +363,8 @@ export function ProfessionalRegisterScreen() {
                 style={styles.input}
                 placeholder="Número do Conselho (CRM, CRN...)"
                 placeholderTextColor="#8A8A8A"
-                value={numeroConselho}
-                onChangeText={setNumeroConselho}
+                value={numeroRegistro}
+                onChangeText={setNumeroRegistro}
               />
             </View>
 
@@ -370,8 +413,8 @@ export function ProfessionalRegisterScreen() {
                 placeholder="Telefone Profissional"
                 placeholderTextColor="#8A8A8A"
                 keyboardType="phone-pad"
-                value={telefoneProfissional}
-                onChangeText={setTelefoneProfissional}
+                value={telefone}
+                onChangeText={setTelefone}
               />
             </View>
 
@@ -387,8 +430,8 @@ export function ProfessionalRegisterScreen() {
                 placeholder="Site ou LinkedIn (opcional)"
                 placeholderTextColor="#8A8A8A"
                 autoCapitalize="none"
-                value={siteProfissional}
-                onChangeText={setSiteProfissional}
+                value={site}
+                onChangeText={setSite}
               />
             </View>
 
@@ -415,8 +458,8 @@ export function ProfessionalRegisterScreen() {
                 Atendimento Presencial
               </Text>
               <Switch
-                value={atendimentoPresencial}
-                onValueChange={setAtendimentoPresencial}
+                value={atendimentoPresencial === 'true'}
+                onValueChange={(value) => setAtendimentoPresencial(value ? 'true' : 'false')}
               />
             </View>
 
@@ -425,8 +468,8 @@ export function ProfessionalRegisterScreen() {
                 Atendimento Online
               </Text>
               <Switch
-                value={atendimentoOnline}
-                onValueChange={setAtendimentoOnline}
+                value={atendimentoOnline === 'true'}
+                onValueChange={(value) => setAtendimentoOnline(value ? 'true' : 'false')}
               />
             </View>
 
@@ -444,8 +487,8 @@ export function ProfessionalRegisterScreen() {
                 placeholder="Senha"
                 placeholderTextColor="#8A8A8A"
                 secureTextEntry={!mostrarSenha}
-                value={senha}
-                onChangeText={setSenha}
+                value={password}
+                onChangeText={setPassword}
               />
               <TouchableOpacity
                 onPress={() => setMostrarSenha(!mostrarSenha)}

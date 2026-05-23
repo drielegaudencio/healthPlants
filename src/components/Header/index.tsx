@@ -46,7 +46,7 @@ export function Header() {
         </TouchableOpacity>
       </View>
 
-      <UserMenu visible={userMenuVisible} onNavigate={goToScreen} />
+      <UserMenu visible={userMenuVisible} onNavigate={goToScreen} onClose={() => setUserMenuVisible(false)} />
 
       <SystemMenu visible={systemMenuVisible} onNavigate={goToScreen} />
     </View>

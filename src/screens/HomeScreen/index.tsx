@@ -10,7 +10,9 @@ import { useNavigation } from "@react-navigation/native";
 import { styles } from "./style";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../@types/navigatio";
-
+import * as ImagePicker from "expo-image-picker";
+import { UserStorageDTO } from "../../storage/user/UserStorageDTO";
+import { useAuth } from "../../context/AuthContext";
 
 type ActionProps = {
   icon: string;
@@ -20,11 +22,9 @@ type ActionProps = {
 };
 
 export function HomeScreen() {
-  const [noticias, setNoticias] = useState<any>(null);
-  //const navigation = useNavigation();
-  type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+const [noticias, setNoticias] = useState<any>(null);
 const navigation = useNavigation<any>();
-
+const {user} = useAuth();
   useEffect(() => {
     const carregarNoticias = async () => {
        const data = await buscarNoticias();
@@ -34,11 +34,61 @@ const navigation = useNavigation<any>();
     carregarNoticias();
   }, []);
 
+  async function abrirCamera() {
+
+  const permission =
+    await ImagePicker.requestCameraPermissionsAsync();
+
+  if (!permission.granted) {
+    alert("Permissão para câmera negada");
+    return;
+  }
+
+  const result = await ImagePicker.launchCameraAsync({
+    mediaTypes: ["images"],
+    quality: 1,
+    allowsEditing: true,
+  });
+
+  if (!result.canceled) {
+
+    const imageUri = result.assets[0].uri;
+
+    navigation.navigate("Reconhecer", {
+      imageUri,
+    });
+  }
+}
+
+  /* async function abrirCamera() {
+    // pede permissão
+    const permission =
+      await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permission.granted) {
+      alert("Permissão para câmera negada");
+      return;
+    }
+    // abre câmera
+  const result = await ImagePicker.launchCameraAsync({
+    mediaTypes: ["images"],
+    quality: 1,
+    allowsEditing: true,
+  });
+
+  if (!result.canceled) {
+    const imageUri = result.assets[0].uri;
+
+    console.log("Imagem:", imageUri);
+
+    //enviarImagemParaAPI(imageUri);
+    return navigation.navigate("Reconhecer", { imageUri });
+} }*/
 
   return (
     <ScreenWrapper >
       <Text style={styles.welcome}>
-        Bem-vinda, Andriele 🌿
+        Bem-vindo(a), {user?.name || "Visitante"} 🌿
       </Text>
 
       <Text style={styles.subtitle}>
@@ -58,7 +108,7 @@ const navigation = useNavigation<any>();
         </View>
        
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={abrirCamera}>
           <Icon name="photo-camera" size={20} color="#fff" />
           <Text style={styles.buttonText}>Abrir Câmera</Text>
         </TouchableOpacity>
@@ -89,10 +139,10 @@ const navigation = useNavigation<any>();
 
         <View style={styles.actions}>
           
-            <Action  onPress={() => navigation.navigate("Pesquisar")} icon="search" label="Buscar por Sintomas" description="Encontre plantas indicadas para o seu sintoma."/>
+            <Action  onPress={() => navigation.navigate("Pesquisar")} icon="search" label="Buscar por Condição" description="Encontre plantas indicadas para a sua condição."/>
           
           
-          <Action icon="favorite" label="Favoritos" description="Acesse rapidamente sua lista de favoritos." />
+          <Action onPress={() => navigation.navigate("Favorite")} icon="favorite" label="Favoritos" description="Acesse rapidamente sua lista de favoritos." />
         </View>
     
       

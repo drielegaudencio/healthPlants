@@ -8,6 +8,7 @@ import { useFonts } from '@expo-google-fonts/cormorant-garamond';
 export default function App() {
   
   return (
+    
     <ThemeProvider theme={themes}>
       <StatusBar
         barStyle='light-content'

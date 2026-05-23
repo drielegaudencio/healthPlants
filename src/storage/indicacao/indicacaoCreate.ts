@@ -3,7 +3,7 @@ import { IndicacaoStorageDTO } from "./indicacaoStorageDTO";
 import { INDICACAO_COLLECTION } from "../storageConfig";
 import { getAllIndicacao } from "./indicacaoGetAll";
 
-export async function createIndicacao(newDoenca: IndicacaoStorageDTO) {
+export async function createIndicacao(newDoenca: IndicacaoStorageDTO): Promise<void> {
     try {
         const storedIndicacao = await getAllIndicacao();
         const updatedIndicacao = [...storedIndicacao, newDoenca];

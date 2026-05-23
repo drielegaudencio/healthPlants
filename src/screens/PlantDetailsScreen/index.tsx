@@ -14,11 +14,14 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "./style";
 import ScreenWrapper from "../../components/screenWrapper";
 import { PLANT_COLLECTION } from "../../storage/storageConfig";
+import { useState } from "react";
+
 export default function PlantDetailsScreen() {
   const route = useRoute<any>();
   const navigation = useNavigation<any>();
   const { planta } = route.params;
   
+
 
   return (
     <ScreenWrapper>

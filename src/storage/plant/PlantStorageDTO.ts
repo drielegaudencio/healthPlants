@@ -26,5 +26,15 @@ export type PlantStorageDTO = {
     vitaminas?: string[];
     minerais?: string[];
     outros?: string[];
+    favorite?:boolean;
+    // RELACIONAMENTOS
+
+  idReceitas?: string[];
+
+  idSintomas?: string[];
+
+  idProfissionais?: string[];
+
+  idEspecialidades?: string[];
 
 }

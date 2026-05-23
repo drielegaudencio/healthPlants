@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -14,7 +15,13 @@ import ScreenWrapper from "../../components/screenWrapper";
 import { styles } from "./style";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+//import { usergetAll } from "../../storage/user/userGetAll";
+import { UserStorageDTO } from "../../storage/user/UserStorageDTO";
+import { HomeScreen } from "../HomeScreen";
+import { userGetAll } from "../../storage/user/userGetAll";
+import { useAuth } from "../../context/AuthContext";
 
+const dataUser = {} as UserStorageDTO;
 /*type RootStackRoutes = {
   Login: undefined;
   Register: undefined;
@@ -26,20 +33,63 @@ export function LoginScreen() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
-
+  const { signIn } = useAuth();
   /*const navigation =
     useNavigation<NativeStackNavigationProp<RootStackRoutes>>();*/
+const navigation = useNavigation<any>();
 
-  const handleLogin = () => {
-    console.log("Login realizado");
-  };
+  async function handleLogin(){
+  try {
+
+    // busca usuários salvos
+    const users = await userGetAll();
+
+    // procura usuário
+    const usuarioLogado = users.find(
+      (user) =>
+        user.email === email &&
+        user.password === senha
+    );
+
+    // encontrou
+    if (usuarioLogado) {
+
+      console.log("Login realizado");
+
+      // salva no Context
+      signIn(usuarioLogado);
+
+      // navega
+      navigation.navigate("Tabs");
+
+    } else {
+
+      Alert.alert(
+        "Erro",
+        "Email ou senha incorretos"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+    Alert.alert(
+      "Erro",
+      "Não foi possível realizar login"
+    );
+
+  }
+};
 
   const handleCadastro = () => {
-    navigation.navigate("Register");
+    
+    navigation.navigate("UserCad");
   };
 
   const handleCadastroProfissional = () => {
-    navigation.navigate("ProfessionalRegister");
+    navigation.navigate("ProfessionalRegisterScreen");
   };
 
   const handleEsqueciSenha = () => {
@@ -47,7 +97,6 @@ export function LoginScreen() {
   };
 
   return (
-    <ScreenWrapper>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -163,9 +212,18 @@ export function LoginScreen() {
                 <Text style={styles.footerLink}> Criar conta</Text>
               </TouchableOpacity>
             </View>
+            <View>
+              {/* visitante */}
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>Entrar sem Login?</Text>
+              </View>
+
+              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+                  <Text style={styles.footerLink2}> Entrar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </ScreenWrapper>
   );
 }
