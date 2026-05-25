@@ -38,7 +38,9 @@ export function Header() {
 
         </TouchableOpacity>
 
-        <Text style={styles.logo }>Health 🌿 Plants</Text>
+        <Text style={styles.logoText}>
+          Health <Text style={styles.logoHighlight}>Plants</Text>
+        </Text>
 
         <TouchableOpacity onPress={toggleSystemMenu}>
           <Icon name="menu" size={26} color={themes.colors.secondary} style={ styles.iconMenu}  />

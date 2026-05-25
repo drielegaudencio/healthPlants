@@ -18,12 +18,17 @@ import { UserStorageDTO } from "../storage/user/UserStorageDTO";
 import { ProfessionalRegisterScreen } from "../screens/ProfessionalRegisterScreen";
 import { DiseaseDetailsScreen } from "../screens/DiseaseDetailsScreen";
 import { FavoritesScreen } from "../screens/FavoritScreen";
-
+import { useAuth } from "../context/AuthContext";
+import { PrivacyPolicyScreen } from "../screens/politicaPrivacidade";
+import { TermsScreen } from "../screens/TermoUso/indesx";
+import { RecipesScreen } from "../screens/ReceitaListScreen";
+import { ProfileScreen } from "../screens/perfilScreen";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const data = {} as UserStorageDTO;
 
 function BottomTabs({ route }: any) {
+    const { user } = useAuth();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -44,22 +49,13 @@ function BottomTabs({ route }: any) {
         },
       }}
     > 
+      
       <Tab.Screen name="Home" component={HomeScreen} options={{
           tabBarIcon: ({ size, color }) => (
             <MaterialIcons name="home" size={size} color={color} />
           ),
         }} 
       />
-      {/* <Tab.Screen
-        name="Home"
-        component={() => HomeScreen(data.id)}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <MaterialIcons name="home" size={size} color={color} />
-          ),
-        }}
-      />
- */}
       <Tab.Screen
         name="Pesquisar"
         component={SearchScreen}
@@ -92,8 +88,8 @@ function BottomTabs({ route }: any) {
           ),
         }}
       />
-
-      <Tab.Screen
+    {user && (
+        <Tab.Screen
         name="Médicos"
         component={ProfessionalsScreen}
         options={{
@@ -102,6 +98,8 @@ function BottomTabs({ route }: any) {
           ),
         }}
       />
+    )}
+      {/* 
       <Tab.Screen
         name="PlantDetails"
         component={PlantDetailsScreen} 
@@ -109,8 +107,21 @@ function BottomTabs({ route }: any) {
           tabBarItemStyle: { display: "none",
     },}}
       />
-      
-      
+      <Tab.Screen
+        name="Favorite"
+        component={FavoritesScreen} 
+        options={{tabBarButton: () => null,
+          tabBarItemStyle: { display: "none",
+    },}}
+      />
+      <Tab.Screen
+        name="DetailIndic"
+        component={DiseaseDetailsScreen} 
+        options={{tabBarButton: () => null,
+          tabBarItemStyle: { display: "none",
+    },}}
+      /> */}
+     
     </Tab.Navigator>
   );
 }
@@ -119,20 +130,35 @@ export function AppRoutes() {
   return (
     
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="UserCad" component={RegisterScreen} 
+        options={{ headerShown: false }}/>
+        <Stack.Screen name="Receitas" component={RecipesScreen} />
+
         <Stack.Screen name="Tabs" component={BottomTabs} />
         
         {/* Telas que NÃO aparecem no menu inferior */}
-        <Stack.Screen name="Home" component={HomeScreen} />
+        {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
         <Stack.Screen name="Cadastro Plantas" component={PlantCadScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Cadastro Indicações" component={IndicacaoCadScreen} />
         <Stack.Screen name="Favorite" component={FavoritesScreen} />
-        <Stack.Screen name="UserCad" component={RegisterScreen} />
+        
         <Stack.Screen name="PlantDetails" component={PlantDetailsScreen} />
-        {/* <Stack.Screen name="Reconhecer" component={PlantScannerScreen} /> */}
-        <Stack.Screen name="ProfessionalRegisterScreen" component={ProfessionalRegisterScreen} />
-        <Stack.Screen name="Pesquisar" component={SearchScreen} />
+       {/*  <Stack.Screen name="Buscar Profissional" component={ProfessionalsScreen} /> */}
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="ProfessionalRegisterScreen" component={ProfessionalRegisterScreen} 
+        options={{ headerShown: false, }}/>
+        {/* <Stack.Screen name="Pesquisar" component={SearchScreen} /> */}
         <Stack.Screen name="DetailIndic" component={DiseaseDetailsScreen} />
+        {/* <Stack.Screen name="Reconhecer" component={PlantScannerScreen} /> */}
+         <Stack.Screen
+            name="PrivacyPolicy" component={PrivacyPolicyScreen}
+          />
+          <Stack.Screen
+            name="Terms"
+            component={TermsScreen}
+/>
+      
       </Stack.Navigator>
       
   );

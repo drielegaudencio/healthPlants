@@ -26,16 +26,24 @@ export function SystemMenu({ visible, onNavigate }: Props) {
           <TouchableOpacity style={styles.item} onPress={() => onNavigate("Cadastro Indicações")}>
             <Text style={styles.text}>Cadastrar Indicação</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.item} onPress={() => onNavigate("ProfessionalRegisterScreen")}>
+        <Text style={styles.text}>Rgistro de Profissional</Text>
+      </TouchableOpacity>
         </>
+    )}
+    {user && ( 
+      <>
+        <TouchableOpacity style={styles.item} onPress={() => onNavigate("Buscar Profissional")}>
+        <Text style={styles.text}>Buscar Profissionais</Text>
+      </TouchableOpacity>
+      </>
     )}
       
       <TouchableOpacity style={styles.item} onPress={() => onNavigate("Receitas")}>
         <Text style={styles.text}>Receitas</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.item} onPress={() => onNavigate("ProfessionalsScreen")}>
-        <Text style={styles.text}>Buscar Profissionais</Text>
-      </TouchableOpacity>
+      
+      
     </View>
   );
 }

@@ -1,21 +1,25 @@
-import {
+import React, {
   createContext,
   useContext,
   useState,
-  ReactNode,
 } from "react";
 
-type User = {
-  id: string;
-  name: string;
-  typeUser: string;
-  isAdmin: boolean;
-};
+import { userGetAll } from "../storage/user/userGetAll";
+import { UserStorageDTO } from "../storage/user/UserStorageDTO";
 
 type AuthContextData = {
-  user: User | null;
-  signIn: (user: User) => void;
-  signOut: () => void;
+  user: UserStorageDTO | null;
+
+  signIn: (
+    email: string,
+    password: string
+  ) => Promise<boolean>;
+
+  signOut: () => Promise<void>;
+};
+
+type AuthProviderProps = {
+  children: React.ReactNode;
 };
 
 const AuthContext =
@@ -23,21 +27,35 @@ const AuthContext =
     {} as AuthContextData
   );
 
-type Props = {
-  children: ReactNode;
-};
-
 export function AuthProvider({
   children,
-}: Props) {
+}: AuthProviderProps) {
   const [user, setUser] =
-    useState<User | null>(null);
+    useState<UserStorageDTO | null>(null);
 
-  function signIn(userData: User) {
-    setUser(userData);
+  async function signIn(
+    email: string,
+    password: string
+  ) {
+    const users = await userGetAll();
+
+    const usuarioLogado = users.find(
+      (item) =>
+        item.email === email &&
+        item.password === password
+    );
+
+    if (!usuarioLogado) {
+      return false;
+    }
+
+    // salva usuário no contexto
+    setUser(usuarioLogado);
+
+    return true;
   }
 
-  function signOut() {
+  async function signOut() {
     setUser(null);
   }
 

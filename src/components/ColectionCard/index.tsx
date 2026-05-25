@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from "react";
-import { View, Text, TouchableOpacity , Image} from "react-native";
+import { View, Text, TouchableOpacity , Image, Alert} from "react-native";
 import { styles } from "./style";
 import { PlantStorageDTO } from "../../storage/plant/PlantStorageDTO";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -7,6 +7,9 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import { getAllPlants } from "../../storage/plant/plantGetAll";
 import { plantUpdate } from "../../storage/plant/plantUpdate";
 import { useAuth } from "../../context/AuthContext";
+import { favoriteGetByUser } from "../../storage/favorite/favoriteGetByUser";
+import { favoriteRemove } from "../../storage/favorite/favoriteRemove";
+import { favoriteCreate } from "../../storage/favorite/favoriteCreate";
 type CollectionCardProps = {
     data : PlantStorageDTO
 };
@@ -34,21 +37,60 @@ const plantCollection = [
 export function CollectionCard({ data}: CollectionCardProps) {
     const { user } = useAuth();
     const navigation = useNavigation<any>();
-    const [isFavorite, setIsFavorite] = useState(
-  data.favorite || false
+    const [isFavorite, setIsFavorite] = useState(false);
+    
+    useFocusEffect(
+        useCallback(() => {
+        async function loadFavorite() {
+
+        if (!user){
+            
+            return;
+        } 
+
+        const favorites =
+            await favoriteGetByUser(user.id);
+
+        const exists = favorites.find(
+            (item: any) =>
+            item.idPlant === data.id
+        );
+
+        setIsFavorite(!!exists);
+        }
+
+        loadFavorite();
+    }, [user])
 );
     async function handleFavorite() {
 
-    const updatedPlant = {
-    ...data,
-    favorite: !isFavorite,
-    };
+  if (!user) {
+    return alert(
+      "Faça login para favoritar"
+    );
+  }
 
-  setIsFavorite(!isFavorite);
+  if (isFavorite) {
 
-  await plantUpdate(updatedPlant);
+    await favoriteRemove(
+      user.id,
+      data.id
+    );
+
+    setIsFavorite(false);
+
+  } else {
+
+    await favoriteCreate({
+      idUser: user.id,
+      idPlant: data.id,
+    });
+
+    setIsFavorite(true);
+  }
 }
-    
+  
+
     return (
         //{data.image && (<Image source={{ uri: data.image }} style={styles.image} />)}
         

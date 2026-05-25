@@ -1,13 +1,13 @@
 // ProfessionalsScreen.tsx
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   FlatList,
-  Image,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -19,19 +19,22 @@ import { styles } from "./styles";
 import { colabGetAll } from "../../storage/colaborador/colabGetAll";
 import { adressGetAll } from "../../storage/adress/adressGetAll";
 
+import { useAuth } from "../../context/AuthContext";
+
 export function ProfessionalsScreen() {
+  const { user } = useAuth();
+
   const [profissionais, setProfissionais] = useState<any[]>([]);
-  const [profissionaisFiltrados, setProfissionaisFiltrados] = useState<any[]>(
-    []
-  );
+  const [profissionaisFiltrados, setProfissionaisFiltrados] =
+    useState<any[]>([]);
+
+  const [cidadeUsuario, setCidadeUsuario] = useState("");
 
   const [buscaProfissao, setBuscaProfissao] = useState("");
-  const [buscaEspecialidade, setBuscaEspecialidade] = useState("");
+  const [buscaEspecialidade, setBuscaEspecialidade] =
+    useState("");
 
   const [mostrarTodos, setMostrarTodos] = useState(false);
-
-  // Cidade do usuário logado
-  const cidadeUsuario = "São Paulo";
 
   useEffect(() => {
     loadProfessionals();
@@ -39,39 +42,69 @@ export function ProfessionalsScreen() {
 
   async function loadProfessionals() {
     try {
+      // colaboradores
       const colaboradores = await colabGetAll();
+
+      // endereços
       const enderecos = await adressGetAll();
 
-      const profissionaisComCidade = colaboradores.map((prof: any) => {
-        const endereco = enderecos.find(
-          (item: any) => item.idUser === prof.idUser
+      // pega cidade do usuário logado
+      if (user?.id) {
+        const enderecoUsuario = enderecos.find(
+          (item: any) => item.idUser === user.id
         );
 
-        return {
-          ...prof,
-          cidade: endereco?.city || "",
-        };
-      });
+        setCidadeUsuario(enderecoUsuario?.city || "");
+      }
+
+      // junta colaborador + endereço
+      const profissionaisComCidade = colaboradores.map(
+        (prof: any) => {
+          const endereco = enderecos.find(
+            (item: any) => item.idUser === prof.idUser
+          );
+
+          return {
+            ...prof,
+
+            cidade: endereco?.city || "",
+
+            estado: endereco?.state || "",
+
+            bairro: endereco?.bairro || "",
+          };
+        }
+      );
+
+      console.log(
+        "Profissionais com cidade:",
+        profissionaisComCidade
+      );
 
       setProfissionais(profissionaisComCidade);
+
+      setProfissionaisFiltrados(
+        profissionaisComCidade
+      );
     } catch (error) {
-      console.log(error);
+      console.log("ERRO:", error);
     }
   }
 
   useEffect(() => {
-    let resultado = profissionais;
+    let resultado = [...profissionais];
 
-    // Mostrar apenas da mesma cidade
-    if (!mostrarTodos) {
+    // somente mesma cidade
+    if (!mostrarTodos && cidadeUsuario) {
       resultado = resultado.filter(
         (item) =>
-          item.cidade.toLowerCase() === cidadeUsuario.toLowerCase()
+          item.cidade?.toLowerCase() ===
+          cidadeUsuario.toLowerCase()
       );
     }
 
-    // Busca profissão
-    if (buscaProfissao) {
+    // busca profissão
+    if (buscaProfissao.trim() !== "") {
       resultado = resultado.filter((item) =>
         item.profission
           ?.toLowerCase()
@@ -79,8 +112,8 @@ export function ProfessionalsScreen() {
       );
     }
 
-    // Busca especialidade
-    if (buscaEspecialidade) {
+    // busca especialidade
+    if (buscaEspecialidade.trim() !== "") {
       resultado = resultado.filter((item) =>
         item.especialidade
           ?.toLowerCase()
@@ -94,6 +127,7 @@ export function ProfessionalsScreen() {
     buscaEspecialidade,
     profissionais,
     mostrarTodos,
+    cidadeUsuario,
   ]);
 
   return (
@@ -102,7 +136,9 @@ export function ProfessionalsScreen() {
         data={profissionaisFiltrados}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 140 }}
+        contentContainerStyle={{
+          paddingBottom: 140,
+        }}
         ListHeaderComponent={
           <>
             {/* HEADER */}
@@ -122,12 +158,26 @@ export function ProfessionalsScreen() {
               <Text style={styles.subtitle}>
                 Encontre especialistas próximos de você
               </Text>
+
+              {!mostrarTodos && cidadeUsuario ? (
+                <Text
+                  style={{
+                    color: "#406B45",
+                    marginTop: 6,
+                    fontWeight: "600",
+                  }}
+                >
+                  Sua cidade: {cidadeUsuario}
+                </Text>
+              ) : null}
             </View>
 
             {/* BOTÃO */}
             <TouchableOpacity
               style={styles.cityButton}
-              onPress={() => setMostrarTodos(!mostrarTodos)}
+              onPress={() =>
+                setMostrarTodos(!mostrarTodos)
+              }
             >
               <Icon
                 name="location-city"
@@ -138,7 +188,7 @@ export function ProfessionalsScreen() {
               <Text style={styles.cityButtonText}>
                 {mostrarTodos
                   ? "Mostrar somente da minha cidade"
-                  : "Listar todos por cidade"}
+                  : "Mostrar todos os profissionais"}
               </Text>
             </TouchableOpacity>
 
@@ -177,7 +227,8 @@ export function ProfessionalsScreen() {
             </View>
 
             <Text style={styles.resultText}>
-              {profissionaisFiltrados.length} profissionais encontrados
+              {profissionaisFiltrados.length} profissionais
+              encontrados
             </Text>
           </>
         }
@@ -194,7 +245,9 @@ export function ProfessionalsScreen() {
 
             {/* INFO */}
             <View style={{ flex: 1 }}>
-              <Text style={styles.name}>{item.name}</Text>
+              <Text style={styles.name}>
+                {item.name || "Profissional"}
+              </Text>
 
               <Text style={styles.profession}>
                 {item.profission}
@@ -204,6 +257,7 @@ export function ProfessionalsScreen() {
                 {item.especialidade}
               </Text>
 
+              {/* cidade */}
               <View style={styles.cityRow}>
                 <Icon
                   name="location-on"
@@ -212,12 +266,14 @@ export function ProfessionalsScreen() {
                 />
 
                 <Text style={styles.cityText}>
-                  {item.cidade}
+                  {item.cidade || "Cidade não informada"}
                 </Text>
               </View>
 
+              {/* bio */}
               <Text style={styles.description}>
-                {item.biografia || "Sem biografia cadastrada"}
+                {item.biografia ||
+                  "Sem biografia cadastrada"}
               </Text>
             </View>
           </View>

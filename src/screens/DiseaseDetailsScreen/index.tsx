@@ -1,6 +1,6 @@
 // DiseaseDetailsScreen.tsx
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   View,
@@ -9,11 +9,19 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 
 import ScreenWrapper from "../../components/screenWrapper";
 
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Feather,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+
+import { getAllRecipes } from "../../storage/recipe/recipeGetAll";
 
 export function DiseaseDetailsScreen() {
   const navigation = useNavigation<any>();
@@ -21,6 +29,26 @@ export function DiseaseDetailsScreen() {
   const route = useRoute<any>();
 
   const { indicacao } = route.params;
+
+  const [recipes, setRecipes] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadRecipes();
+  }, []);
+
+  async function loadRecipes() {
+    const allRecipes = await getAllRecipes();
+
+    // procura receitas pelo nome
+    const receitasRelacionadas =
+      allRecipes.filter((recipe: any) =>
+        indicacao.receitas?.includes(
+          recipe.name
+        )
+      );
+
+    setRecipes(receitasRelacionadas);
+  }
 
   return (
     <ScreenWrapper>
@@ -160,29 +188,71 @@ export function DiseaseDetailsScreen() {
               </Text>
             </View>
 
-            {indicacao.receitas?.length > 0 ? (
-              indicacao.receitas.map(
-                (receita: string, index: number) => (
-                  <View
-                    key={index}
+            {recipes.length > 0 ? (
+              recipes.map((recipe) => (
+                <TouchableOpacity
+                  key={recipe.id}
+                  activeOpacity={0.8}
+                  onPress={() =>
+                    navigation.navigate(
+                      "RecipeDetails",
+                      {
+                        recipe,
+                      }
+                    )
+                  }
+                  style={{
+                    backgroundColor: "#EEF5EA",
+                    padding: 14,
+                    borderRadius: 12,
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text
                     style={{
-                      backgroundColor: "#EEF5EA",
-                      padding: 14,
-                      borderRadius: 12,
-                      marginBottom: 10,
+                      color: "#2F5136",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    🌿 {recipe.name}
+                  </Text>
+
+                  <Text
+                    numberOfLines={2}
+                    style={{
+                      marginTop: 6,
+                      color: "#555",
+                    }}
+                  >
+                    {recipe.description}
+                  </Text>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      marginTop: 8,
                     }}
                   >
                     <Text
                       style={{
-                        color: "#2F5136",
-                        fontSize: 15,
+                        color: "#4E7A52",
+                        fontWeight: "bold",
                       }}
                     >
-                      🌿 {receita}
+                      Ver receita
                     </Text>
+
+                    <MaterialCommunityIcons
+                      name="chevron-right"
+                      size={22}
+                      color="#4E7A52"
+                    />
                   </View>
-                )
-              )
+                </TouchableOpacity>
+              ))
             ) : (
               <Text
                 style={{

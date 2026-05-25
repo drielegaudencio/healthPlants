@@ -38,12 +38,12 @@ export function LoginScreen() {
     useNavigation<NativeStackNavigationProp<RootStackRoutes>>();*/
 const navigation = useNavigation<any>();
 
-  async function handleLogin(){
+  /* async function handleLogin(){
   try {
 
     // busca usuários salvos
     const users = await userGetAll();
-
+    
     // procura usuário
     const usuarioLogado = users.find(
       (user) =>
@@ -57,7 +57,7 @@ const navigation = useNavigation<any>();
       console.log("Login realizado");
 
       // salva no Context
-      signIn(usuarioLogado);
+      setUser(usuarioLogado);
 
       // navega
       navigation.navigate("Tabs");
@@ -81,7 +81,42 @@ const navigation = useNavigation<any>();
     );
 
   }
-};
+}; */
+
+async function handleLogin() {
+  try {
+
+    const success = await signIn(
+      email,
+      senha
+    );
+
+    if (success) {
+
+      console.log("Login realizado");
+
+      navigation.navigate("Tabs");
+
+    } else {
+
+      Alert.alert(
+        "Erro",
+        "Email ou senha incorretos"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+    Alert.alert(
+      "Erro",
+      "Não foi possível realizar login"
+    );
+
+  }
+}
 
   const handleCadastro = () => {
     
@@ -128,10 +163,10 @@ const navigation = useNavigation<any>();
           {/* Card de Login */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Entrar na sua conta</Text>
-            <Text style={styles.cardDescription}>
+            {/* <Text style={styles.cardDescription}>
               Acesse para identificar plantas, salvar favoritos e acompanhar
               recomendações personalizadas.
-            </Text>
+            </Text> */}
 
             {/* Campo de Email */}
             <View style={styles.inputContainer}>
@@ -218,7 +253,7 @@ const navigation = useNavigation<any>();
                 <Text style={styles.footerText}>Entrar sem Login?</Text>
               </View>
 
-              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+              <TouchableOpacity onPress={() => navigation.navigate("Tabs")}>
                   <Text style={styles.footerLink2}> Entrar</Text>
               </TouchableOpacity>
             </View>
@@ -227,3 +262,8 @@ const navigation = useNavigation<any>();
       </KeyboardAvoidingView>
   );
 }
+/* 
+function setUser(usuarioLogado: UserStorageDTO) {
+  throw new Error("Function not implemented.");
+}
+ */

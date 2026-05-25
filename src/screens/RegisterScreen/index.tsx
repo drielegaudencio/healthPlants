@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  Switch,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -22,6 +23,8 @@ import { convertBool } from "../../components/utils/convertBool";
 import { adressCreate } from "../../storage/adress/adressCreate";
 
 export function RegisterScreen() {
+  const [aceitouTermos, setAceitouTermos] = useState(false);
+  
   // Dados pessoais
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -51,6 +54,12 @@ export function RegisterScreen() {
           "As senhas não coincidem"
         );
       } 
+      if (!aceitouTermos) {
+              return Alert.alert(
+                "Aviso",
+                "Você precisa aceitar os termos para continuar."
+              );
+      }
     const dataUser = {
       id: String(new Date().getTime()),
       name,
@@ -88,7 +97,7 @@ export function RegisterScreen() {
   };
 
   return (
-    <ScreenWrapper>
+  
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -345,6 +354,56 @@ export function RegisterScreen() {
               </TouchableOpacity>
             </View>
 
+              {/*Termo de privacidade e uso */}
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "flex-start",
+                          marginTop: 18,
+                        }}
+                      >
+                        <Switch
+                          value={aceitouTermos}
+                          onValueChange={setAceitouTermos}
+                        />
+                        <Text
+        style={{
+          fontSize: 12,
+          color: "#666",
+          marginTop: 18,
+          lineHeight: 18,
+          textAlign: "justify",
+        }}
+      >
+        Li e concordo com a {" "}
+
+        <Text
+          onPress={() =>
+            navigation.navigate("PrivacyPolicy")
+          }
+          style={{
+            color: "#2E7D32",
+            fontWeight: "bold",
+            textDecorationLine: "underline",
+          }}
+            >
+              Política de Privacidade
+            </Text>
+
+            {" "}e os {" "} <Text
+              onPress={() =>
+                navigation.navigate("Terms")
+              }
+              style={{
+                color: "#2E7D32",
+                fontWeight: "bold",
+                textDecorationLine: "underline",
+              }}
+            >
+              Termos de Uso da plataforma
+            </Text>{" "}.
+          </Text>
+          </View>
             {/* Botão Cadastrar */}
             <TouchableOpacity
               style={styles.registerButton}
@@ -364,9 +423,10 @@ export function RegisterScreen() {
                 <Text style={styles.footerLink}> Entrar</Text>
               </TouchableOpacity>
             </View>
+
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </ScreenWrapper>
+
   );
 }

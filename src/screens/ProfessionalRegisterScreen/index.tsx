@@ -26,6 +26,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export function ProfessionalRegisterScreen() {
   const navigation = useNavigation<any>();
+  const [aceitouTermos, setAceitouTermos] = useState(false);
   // Dados pessoais
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -69,7 +70,13 @@ export function ProfessionalRegisterScreen() {
               "Erro",
               "As senhas não coincidem"
             );
-          } 
+      }
+      if (!aceitouTermos) {
+        return Alert.alert(
+          "Aviso",
+          "Você precisa aceitar os termos para continuar."
+        );
+}
         const dataUser = {
           id: String(new Date().getTime()),
           name,
@@ -122,7 +129,7 @@ export function ProfessionalRegisterScreen() {
   };
 
   return (
-    <ScreenWrapper>
+   
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -531,8 +538,57 @@ export function ProfessionalRegisterScreen() {
                   color="#8A8A8A"
                 />
               </TouchableOpacity>
-            </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                    marginTop: 18,
+                  }}
+                >
+                  <Switch
+                    value={aceitouTermos}
+                    onValueChange={setAceitouTermos}
+                  />
+                  <Text
+  style={{
+    fontSize: 12,
+    color: "#666",
+    marginTop: 18,
+    lineHeight: 18,
+    textAlign: "justify",
+  }}
+>
+  Li e concordo com a {" "}
 
+  <Text
+    onPress={() =>
+      navigation.navigate("PrivacyPolicy")
+    }
+    style={{
+      color: "#2E7D32",
+      fontWeight: "bold",
+      textDecorationLine: "underline",
+    }}
+  >
+    Política de Privacidade
+  </Text>
+
+  {" "}e os {" "} <Text
+    onPress={() =>
+      navigation.navigate("Terms")
+    }
+    style={{
+      color: "#2E7D32",
+      fontWeight: "bold",
+      textDecorationLine: "underline",
+    }}
+  >
+    Termos de Uso da plataforma
+  </Text>{" "}.
+</Text>
+                 
+                </View>
             {/* Botão Cadastrar */}
             <TouchableOpacity
               style={styles.registerButton}
@@ -561,6 +617,6 @@ export function ProfessionalRegisterScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </ScreenWrapper>
+  
   );
 }

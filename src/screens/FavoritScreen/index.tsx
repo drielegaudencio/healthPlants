@@ -1,173 +1,129 @@
-// FavoritesScreen.tsx
+import React, { useCallback, useState } from "react";
 
-import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   FlatList,
-  TouchableOpacity,
-  Image,
 } from "react-native";
 
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 
 import ScreenWrapper from "../../components/screenWrapper";
-import { styles } from "./style";
+
+import { useAuth } from "../../context/AuthContext";
 
 import { getAllPlants } from "../../storage/plant/plantGetAll";
 
+import { favoriteGetByUser } from "../../storage/favorite/favoriteGetByUser";
+
+import { CollectionCard } from "../../components/ColectionCard";
+
+import { PlantStorageDTO } from "../../storage/plant/PlantStorageDTO";
+
 export function FavoritesScreen() {
-  const navigation = useNavigation<any>();
 
-  const [favorites, setFavorites] = useState<any[]>([]);
+  const { user } = useAuth();
 
-  useEffect(() => {
-    loadFavorites();
-  }, []);
+  const [plants, setPlants] = useState<
+    PlantStorageDTO[]
+  >([]);
 
   async function loadFavorites() {
-    try {
-      const plants = await getAllPlants();
 
-      // Apenas favoritos
-      const onlyFavorites = plants.filter(
-        (item) => item.favorite === true
+    if (!user) return;
+
+    // favoritos do usuário
+    const favorites =
+      await favoriteGetByUser(user.id);
+
+    // todas plantas
+    const allPlants =
+      await getAllPlants();
+
+    // filtra somente favoritadas
+    const filteredPlants =
+      allPlants.filter((plant) =>
+        favorites.some(
+          (fav: any) =>
+            fav.idPlant === plant.id
+        )
       );
 
-      setFavorites(onlyFavorites);
-    } catch (error) {
-      console.log(error);
-    }
+    setPlants(filteredPlants);
   }
 
-  function handleOpenPlant(planta: any) {
-    navigation.navigate("PlantDetails", {
-      planta,
-    });
+  useFocusEffect(
+    useCallback(() => {
+      loadFavorites();
+    }, [user])
+  );
+
+  if (!user) {
+    return (
+      <ScreenWrapper>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              textAlign: "center",
+            }}
+          >
+            Faça login para visualizar seus favoritos.
+          </Text>
+        </View>
+      </ScreenWrapper>
+    );
   }
 
   return (
     <ScreenWrapper>
-      <FlatList
-        data={favorites}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: 140,
+      <View
+        style={{
+          flex: 1,
+          padding: 20,
         }}
-        ListHeaderComponent={
-          <>
-            {/* HEADER */}
-            <View style={styles.header}>
-              <View style={styles.iconContainer}>
-                <MaterialCommunityIcons
-                  name="heart"
-                  size={42}
-                  color="#5A8F62"
-                />
-              </View>
+      >
+        <Text
+          style={{
+            fontSize: 28,
+            fontWeight: "bold",
+            marginBottom: 20,
+            color: "#23482D",
+          }}
+        >
+          Meus Favoritos
+        </Text>
 
-              <Text style={styles.title}>
-                Plantas Favoritas
-              </Text>
-
-              <Text style={styles.subtitle}>
-                Suas plantas salvas para acesso rápido
-              </Text>
-            </View>
-
-            <Text style={styles.resultText}>
-              {favorites.length} favoritas encontradas
+        <FlatList
+          data={plants}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 120,
+          }}
+          ListEmptyComponent={
+            <Text
+              style={{
+                textAlign: "center",
+                marginTop: 40,
+                color: "#666",
+              }}
+            >
+              Você ainda não possui favoritos.
             </Text>
-          </>
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <MaterialCommunityIcons
-              name="leaf-off"
-              size={90}
-              color="#B8C9BA"
-            />
-
-            <Text style={styles.emptyTitle}>
-              Nenhuma planta favorita
-            </Text>
-
-            <Text style={styles.emptyText}>
-              Adicione plantas aos favoritos para
-              encontrá-las rapidamente aqui.
-            </Text>
-          </View>
-        }
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => handleOpenPlant(item)}
-          >
-            {/* IMAGEM */}
-            <Image
-              source={{ uri: item.image }}
-              style={styles.image}
-            />
-
-            {/* INFO */}
-            <View style={styles.content}>
-              <View style={styles.topRow}>
-                <Text style={styles.name}>
-                  {item.namePop}
-                </Text>
-
-                <MaterialCommunityIcons
-                  name="heart"
-                  size={24}
-                  color="#5A8F62"
-                />
-              </View>
-
-              <Text style={styles.scientific}>
-                {item.nameSci}
-              </Text>
-
-              <Text
-                style={styles.description}
-                numberOfLines={3}
-              >
-                {item.about || "Sem descrição"}
-              </Text>
-
-              {/* TAGS */}
-              <View style={styles.tagsContainer}>
-                {item.properties?.map(
-                  (property: string, index: number) => (
-                    <View
-                      key={index}
-                      style={styles.tag}
-                    >
-                      <Text style={styles.tagText}>
-                        {property}
-                      </Text>
-                    </View>
-                  )
-                )}
-              </View>
-
-              {/* BOTÃO */}
-              <View style={styles.footer}>
-                <Text style={styles.moreText}>
-                  Ver detalhes
-                </Text>
-
-                <Feather
-                  name="chevron-right"
-                  size={22}
-                  color="#406B45"
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+          }
+          renderItem={({ item }) => (
+            <CollectionCard data={item} />
+          )}
+        />
+      </View>
     </ScreenWrapper>
   );
 }

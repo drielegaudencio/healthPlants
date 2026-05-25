@@ -11,7 +11,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import ScreenWrapper from "../../components/screenWrapper";
 import { getAllIndicacao } from "../../storage/indicacao/indicacaoGetAll";
-
+import { Picker } from "@react-native-picker/picker";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -155,46 +155,36 @@ export function SearchScreen() {
           Especialidade
         </Text>
 
-        <FlatList
-          horizontal
-          data={especialidades}
-          keyExtractor={(item, index) => `${item}-${index}`}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 8 }}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                setEspecialidadeSelecionada(
-                  especialidadeSelecionada === item ? "" : item
-                )
-              }
-              style={{
-                backgroundColor:
-                  especialidadeSelecionada === item
-                    ? "#4E7A52"
-                    : "#E8F1E3",
+        <View
+          style={{
+            backgroundColor: "#E8F1E3",
+            borderRadius: 12,
+            marginBottom: 20,
+            overflow: "hidden",
+          }}
+        >
+          <Picker
+            selectedValue={especialidadeSelecionada}
+            onValueChange={(itemValue) =>
+              setEspecialidadeSelecionada(itemValue)
+            }
+          >
+            <Picker.Item
+              label="Selecione uma especialidade"
+              value=""
+            />
 
-                paddingHorizontal: 14,
-                paddingVertical: 10,
-                borderRadius: 20,
-                marginBottom: 15,
-              }}
-            >
-              <Text
-                style={{
-                  color:
-                    especialidadeSelecionada === item
-                      ? "#fff"
-                      : "#2F5136",
-                }}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
+            {especialidades.map((item, index) => (
+              <Picker.Item
+                key={`${item}-${index}`}
+                label={item}
+                value={item}
+              />
+            ))}
+          </Picker>
+        </View>
 
-        {/* profissionais */}
+         {/* profissionais */}
         <Text
           style={{
             fontWeight: "bold",
@@ -205,45 +195,34 @@ export function SearchScreen() {
           Profissional
         </Text>
 
-        <FlatList
-          horizontal
-          data={profissionais}
-          keyExtractor={(item, index) => `${item}-${index}`}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 8 }}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                setProfissionalSelecionado(
-                  profissionalSelecionado === item ? "" : item
-                )
-              }
-              style={{
-                backgroundColor:
-                  profissionalSelecionado === item
-                    ? "#4E7A52"
-                    : "#E8F1E3",
+        <View
+          style={{
+            backgroundColor: "#E8F1E3",
+            borderRadius: 12,
+            marginBottom: 20,
+            overflow: "hidden",
+          }}
+        >
+          <Picker
+            selectedValue={profissionalSelecionado}
+            onValueChange={(itemValue) =>
+              setProfissionalSelecionado(itemValue)
+            }
+          >
+            <Picker.Item
+              label="Selecione um profissional"
+              value=""
+            />
 
-                paddingHorizontal: 14,
-                paddingVertical: 10,
-                borderRadius: 20,
-                marginBottom: 20,
-              }}
-            >
-              <Text
-                style={{
-                  color:
-                    profissionalSelecionado === item
-                      ? "#fff"
-                      : "#2F5136",
-                }}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-
+            {profissionais.map((item, index) => (
+              <Picker.Item
+                key={`${item}-${index}`}
+                label={item}
+                value={item}
+              />
+            ))}
+          </Picker>
+        </View>
         {/* botões */}
         <View
           style={{
@@ -315,7 +294,7 @@ export function SearchScreen() {
               activeOpacity={0.8}
               onPress={() =>
                 navigation.navigate(
-                  "DiseaseDetails",
+                  "DetailIndic",
                   {
                     indicacao: item,
                   }

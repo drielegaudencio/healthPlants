@@ -52,6 +52,25 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
+  logoContainer: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: "#1F3D2B",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+
+  logoText: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: themes.colors.primary,
+  },
+
+  logoHighlight: {
+    color: "#4F7A5A",
+  },
   menuText: {
     fontSize: 16,
     color: themes.colors.text,

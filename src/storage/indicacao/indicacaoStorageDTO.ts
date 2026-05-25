@@ -3,8 +3,7 @@ export type IndicacaoStorageDTO = {
     name: string;
     descricao: string;
     especialidade: string;
-  profissional: string;
-
-  sintomas: string[];
-  receitas: string[];
+    profissional: string;
+    sintomas: string[];
+    receitas: string[];
 }

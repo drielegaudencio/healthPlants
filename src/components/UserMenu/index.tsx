@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "./style";
 
 import { useAuth } from "../../context/AuthContext";
+import { LoginScreen } from "../../screens/LoginScreen";
 
 type Props = {
   visible: boolean;
@@ -110,8 +111,10 @@ export function UserMenu({
                 <TouchableOpacity
                   style={styles.item}
                   onPress={() => {
+                    onNavigate("Login");
                     signOut();
                     onClose();
+                    
                   }}
                 >
                   <Text style={styles.text}>

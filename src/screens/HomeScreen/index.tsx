@@ -1,5 +1,5 @@
 import React, {useEffect, useReducer, useState} from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView, Alert } from "react-native";
 import ScreenWrapper from "../../components/screenWrapper";
 import {themes} from "../../global/styles/color";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -13,6 +13,7 @@ import { RootStackParamList } from "../../@types/navigatio";
 import * as ImagePicker from "expo-image-picker";
 import { UserStorageDTO } from "../../storage/user/UserStorageDTO";
 import { useAuth } from "../../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type ActionProps = {
   icon: string;
@@ -26,11 +27,35 @@ const [noticias, setNoticias] = useState<any>(null);
 const navigation = useNavigation<any>();
 const {user} = useAuth();
   useEffect(() => {
+    async function showWarning() {
+    const alreadyShown = await AsyncStorage.getItem(
+      "@warning_shown"
+    );
+
+    if (!alreadyShown) {
+      Alert.alert(
+        "Aviso Importante",
+        "Plantas medicinais e produtos fitoterápicos podem provocar efeitos adversos, toxicidade e contraindicações, principalmente quando utilizados junto a medicamentos alopáticos. A utilização deve ser feita com cautela e, preferencialmente, com orientação de um profissional da saúde.",
+        [
+          {
+            text: "Entendi",
+            onPress: async () => {
+              await AsyncStorage.setItem(
+                "@warning_shown",
+                "true"
+              );
+            },
+          },
+        ]
+      );
+    }
+  }
+    showWarning();
     const carregarNoticias = async () => {
        const data = await buscarNoticias();
       setNoticias(data);
     };
-
+    
     carregarNoticias();
   }, []);
 
